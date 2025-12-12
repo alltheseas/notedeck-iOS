@@ -1,0 +1,382 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2ED3541D7BE368682015990E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F85D1DB8E0394B3B545C74F1 /* Assets.xcassets */; };
+		65CC2301946F7542BDE49A1B /* NotedeckUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE4FFAC5CBD1748F96DEE0B /* NotedeckUIView.swift */; };
+		8297500552B04A6B89DD3113 /* NotedeckRendererController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7C6A34716D3065C6AE617D /* NotedeckRendererController.swift */; };
+		8B852BA5707BD85CBFED53B2 /* NotedeckMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4BB6B72848C5236DD804C1 /* NotedeckMobileApp.swift */; };
+		953036ADAEC6E51E0E017F12 /* NotedeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E88E5B55E3412A24754A6DF /* NotedeckView.swift */; };
+		C44CE8F4DE7CF14D509772D6 /* NotedeckMobile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EAE14D72FA1312AAEF2A949 /* NotedeckMobile */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		04EFB2FC3E0E968979F5C54F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1D7C6A34716D3065C6AE617D /* NotedeckRendererController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotedeckRendererController.swift; sourceTree = "<group>"; };
+		1E88E5B55E3412A24754A6DF /* NotedeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotedeckView.swift; sourceTree = "<group>"; };
+		1FE4FFAC5CBD1748F96DEE0B /* NotedeckUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotedeckUIView.swift; sourceTree = "<group>"; };
+		4E3BA78D1E7AA9E3DC5BE387 /* NotedeckMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotedeckMobile.entitlements; sourceTree = "<group>"; };
+		6D4BB6B72848C5236DD804C1 /* NotedeckMobileApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotedeckMobileApp.swift; sourceTree = "<group>"; };
+		B12212464B03188187FC9C40 /* NotedeckMobile */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NotedeckMobile; path = ../../crates/notedeck_ios/NotedeckMobile; sourceTree = SOURCE_ROOT; };
+		EC0129007D80F6958374B808 /* Notedeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notedeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F85D1DB8E0394B3B545C74F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D94B2118F26BE93328721AA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C44CE8F4DE7CF14D509772D6 /* NotedeckMobile in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		76CC9855635D31F92666DA09 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1D7C6A34716D3065C6AE617D /* NotedeckRendererController.swift */,
+				1FE4FFAC5CBD1748F96DEE0B /* NotedeckUIView.swift */,
+				1E88E5B55E3412A24754A6DF /* NotedeckView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C342697974BE9DF3F199D4D3 = {
+			isa = PBXGroup;
+			children = (
+				E00673E81C993859D969EF60 /* NotedeckMobile */,
+				DFDCD985BCC2BF240AE64F32 /* Packages */,
+				D77F86200AADB5A76CC47E8D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D77F86200AADB5A76CC47E8D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EC0129007D80F6958374B808 /* Notedeck.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DFDCD985BCC2BF240AE64F32 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				B12212464B03188187FC9C40 /* NotedeckMobile */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		E00673E81C993859D969EF60 /* NotedeckMobile */ = {
+			isa = PBXGroup;
+			children = (
+				F85D1DB8E0394B3B545C74F1 /* Assets.xcassets */,
+				04EFB2FC3E0E968979F5C54F /* Info.plist */,
+				4E3BA78D1E7AA9E3DC5BE387 /* NotedeckMobile.entitlements */,
+				6D4BB6B72848C5236DD804C1 /* NotedeckMobileApp.swift */,
+				76CC9855635D31F92666DA09 /* Views */,
+			);
+			path = NotedeckMobile;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FD26EA6BE12BD3F51574E0BC /* Notedeck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EBCAD9B15C361D8697F7251 /* Build configuration list for PBXNativeTarget "Notedeck" */;
+			buildPhases = (
+				59FCFE0895CC41F76EBFB3B2 /* Sources */,
+				3FA42F3D2FF440F6C016FD35 /* Resources */,
+				D94B2118F26BE93328721AA8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Notedeck;
+			packageProductDependencies = (
+				0EAE14D72FA1312AAEF2A949 /* NotedeckMobile */,
+			);
+			productName = Notedeck;
+			productReference = EC0129007D80F6958374B808 /* Notedeck.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FC58E11D542B0824F274F478 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					FD26EA6BE12BD3F51574E0BC = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E39A5E708269282BB3B08D4A /* Build configuration list for PBXProject "Notedeck" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C342697974BE9DF3F199D4D3;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F67BFB53CF2E030C5CA9867A /* XCLocalSwiftPackageReference "../../crates/notedeck_ios/NotedeckMobile" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FD26EA6BE12BD3F51574E0BC /* Notedeck */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3FA42F3D2FF440F6C016FD35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ED3541D7BE368682015990E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		59FCFE0895CC41F76EBFB3B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B852BA5707BD85CBFED53B2 /* NotedeckMobileApp.swift in Sources */,
+				8297500552B04A6B89DD3113 /* NotedeckRendererController.swift in Sources */,
+				65CC2301946F7542BDE49A1B /* NotedeckUIView.swift in Sources */,
+				953036ADAEC6E51E0E017F12 /* NotedeckView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		609618313456E2FCFDCFE1EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		7AA0C0EE2AF2CC1F3BA5B55D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9D756220AC2B25F829656685 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NotedeckMobile/NotedeckMobile.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XK7H4JAB3D;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = NotedeckMobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.damus.notedeck;
+				PRODUCT_NAME = Notedeck;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9FDA84893159C509EC69D38A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NotedeckMobile/NotedeckMobile.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XK7H4JAB3D;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = NotedeckMobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.damus.notedeck;
+				PRODUCT_NAME = Notedeck;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5EBCAD9B15C361D8697F7251 /* Build configuration list for PBXNativeTarget "Notedeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9FDA84893159C509EC69D38A /* Debug */,
+				9D756220AC2B25F829656685 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E39A5E708269282BB3B08D4A /* Build configuration list for PBXProject "Notedeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AA0C0EE2AF2CC1F3BA5B55D /* Debug */,
+				609618313456E2FCFDCFE1EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F67BFB53CF2E030C5CA9867A /* XCLocalSwiftPackageReference "../../crates/notedeck_ios/NotedeckMobile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../crates/notedeck_ios/NotedeckMobile;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EAE14D72FA1312AAEF2A949 /* NotedeckMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NotedeckMobile;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FC58E11D542B0824F274F478 /* Project object */;
+}

@@ -1,0 +1,41 @@
+name: Notedeck
+options:
+  bundleIdPrefix: com.damus
+  deploymentTarget:
+    iOS: "14.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+packages:
+  NotedeckMobile:
+    path: ../../crates/notedeck_ios/NotedeckMobile
+
+targets:
+  Notedeck:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: NotedeckMobile
+        excludes:
+          - "*.xcassets"
+      - path: NotedeckMobile/Assets.xcassets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.damus.notedeck
+        INFOPLIST_FILE: NotedeckMobile/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+        ENABLE_BITCODE: NO
+        PRODUCT_NAME: Notedeck
+    dependencies:
+      - package: NotedeckMobile
+    entitlements:
+      path: NotedeckMobile/NotedeckMobile.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
