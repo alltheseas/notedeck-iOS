@@ -33,7 +33,8 @@ final class NotedeckRendererController: NSObject {
         layer.drawableSize = CGSize(width: size.width * scale, height: size.height * scale)
         layer.contentsScale = scale
 
-        let rawPointer = Unmanaged.passUnretained(layer).toOpaque()
+        // Pass the UIView pointer - wgpu extracts CAMetalLayer from it
+        let rawPointer = Unmanaged.passUnretained(view).toOpaque()
 
         // Get the app's data directory
         let dataPath = getDataPath()
