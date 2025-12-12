@@ -1,0 +1,46 @@
+[package]
+name = "notedeck_ios"
+version = "0.1.0"
+edition = "2021"
+description = "iOS rendering layer for Notedeck using wgpu/Metal"
+
+[lib]
+name = "notedeck_ios"
+crate-type = ["staticlib", "lib"]
+
+[profile.release]
+strip = "symbols"
+opt-level = "z"
+panic = "abort"
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+# Swift bridge for FFI
+swift-bridge = "0.1"
+
+# Async runtime
+futures = "0.3"
+tokio = { workspace = true, features = ["rt", "macros"] }
+
+# wgpu for Metal rendering (must match egui-wgpu from damus fork: 24.0.0)
+wgpu = { version = "24.0.0", default-features = false, features = ["metal", "wgsl"] }
+
+# egui and rendering backend from damus fork
+egui = { workspace = true }
+egui-wgpu = { workspace = true }
+
+# Notedeck dependencies
+notedeck = { workspace = true }
+notedeck_chrome = { workspace = true }
+nostrdb = { workspace = true }
+
+# Tracing
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+
+# Font loading
+font-kit = "0.14.2"
+
+[build-dependencies]
+swift-bridge-build = "0.1"
