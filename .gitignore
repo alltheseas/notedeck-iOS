@@ -23,3 +23,12 @@ scripts/macos_build_secrets.sh
 .lsp
 .idea
 local.properties
+# iOS generated files - these are built by swift-bridge-cli
+crates/notedeck_ios/NotedeckMobile/
+
+# Xcode user-specific files
+ios-app/**/xcuserdata/
+**/*.xcuserstate
+
+# Debug screenshots
+ios-app/**/*.png
