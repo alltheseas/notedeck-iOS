@@ -10,7 +10,6 @@ description = "The nostr browser"
 
 [dependencies]
 bitflags = { workspace = true }
-eframe = { workspace = true }
 egui_tabs = { workspace = true }
 egui_extras = { workspace = true }
 egui_nav = { workspace = true }
@@ -56,12 +55,20 @@ tracy = ["profiling/profile-with-tracy"]
 debug-widget-callstack = ["egui/callstack"]
 debug-interactive-widgets = []
 
+# eframe (which uses winit) is only available on desktop/Android - not iOS
+[target.'cfg(not(target_os = "ios"))'.dependencies]
+eframe = { workspace = true }
+
 [target.'cfg(target_os = "android")'.dependencies]
 tracing-logcat = "0.1.0"
 #log = { workspace = true }
 #android-activity = { version = "0.6", features = [ "game-activity" ] }
 egui-winit.workspace = true
 android-keyring = { workspace = true }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+egui-ios = { path = "../egui-ios" }
+swift-bridge = "0.1"
 
 [package.metadata.bundle]
 name = "Notedeck"

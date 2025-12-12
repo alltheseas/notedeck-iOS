@@ -1,6 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 // hide console window on Windows in release
 
+// This binary is for desktop platforms only (not iOS)
+// iOS uses the lib.rs/ios.rs entry point instead
+
 #[cfg(feature = "memory")]
 use re_memory::AccountingAllocator;
 
@@ -9,11 +12,16 @@ use re_memory::AccountingAllocator;
 static GLOBAL: AccountingAllocator<std::alloc::System> =
     AccountingAllocator::new(std::alloc::System);
 
+#[cfg(not(target_os = "ios"))]
 use notedeck::{DataPath, DataPathType, Notedeck};
+#[cfg(not(target_os = "ios"))]
 use notedeck_chrome::{setup::generate_native_options, Chrome};
+#[cfg(not(target_os = "ios"))]
 use tracing_appender::non_blocking::WorkerGuard;
+#[cfg(not(target_os = "ios"))]
 use tracing_subscriber::EnvFilter;
 
+#[cfg(not(target_os = "ios"))]
 fn setup_logging(path: &DataPath) -> Option<WorkerGuard> {
     #[allow(unused_variables)] // need guard to live for lifetime of program
     let (maybe_non_blocking, maybe_guard) = {
@@ -65,8 +73,8 @@ fn setup_logging(path: &DataPath) -> Option<WorkerGuard> {
     maybe_guard
 }
 
-// Desktop
-#[cfg(not(target_arch = "wasm32"))]
+// Desktop (not wasm, not iOS)
+#[cfg(all(not(target_arch = "wasm32"), not(target_os = "ios")))]
 #[tokio::main]
 async fn main() {
     #[cfg(feature = "memory")]
@@ -95,6 +103,15 @@ async fn main() {
     );
 }
 
+// iOS stub - the actual entry point is through the library FFI
+#[cfg(target_os = "ios")]
+fn main() {
+    // iOS apps are built as libraries, not binaries.
+    // The actual entry point is through notedeck_chrome::ios::NotedeckIos
+    // which is called from Swift.
+    panic!("iOS builds should use the library entry point, not this binary");
+}
+
 /*
  * TODO: nostrdb not supported on web
  *
@@ -119,9 +136,9 @@ pub fn main() {
 }
 */
 
-#[cfg(test)]
+#[cfg(all(test, not(target_os = "ios")))]
 mod tests {
-    use super::Notedeck;
+    use notedeck::Notedeck;
     use notedeck_columns::Damus;
     use std::path::{Path, PathBuf};
 

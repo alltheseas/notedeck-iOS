@@ -4,6 +4,7 @@
 use crate::app::NotedeckApp;
 use crate::ChromeOptions;
 use bitflags::bitflags;
+#[cfg(not(target_os = "ios"))]
 use eframe::CreationContext;
 use egui::{
     vec2, Color32, CornerRadius, Label, Layout, Margin, Rect, RichText, Sense, ThemePreference, Ui,
@@ -25,7 +26,9 @@ use notedeck::{
     UserAccount, WalletType,
 };
 use notedeck_columns::{timeline::TimelineKind, Damus};
-use notedeck_dave::{Dave, DaveAvatar};
+use notedeck_dave::Dave;
+#[cfg(not(target_os = "ios"))]
+use notedeck_dave::DaveAvatar;
 use notedeck_ui::{app_images, expanding_button, galley_centered_pos, ProfilePic};
 use std::collections::HashMap;
 
@@ -120,6 +123,14 @@ impl ChromePanelAction {
 
 /// Some people have been running notedeck in debug, let's catch that!
 fn stop_debug_mode(options: NotedeckOptions) {
+    // Skip debug mode check on iOS.
+    // iOS apps built from source are always developer builds - there's no
+    // "cargo run --release" equivalent for Xcode. Developers building for iOS
+    // know what they're doing, and the panic would prevent any iOS testing.
+    if cfg!(target_os = "ios") {
+        return;
+    }
+
     if !options.contains(NotedeckOptions::Tests)
         && cfg!(debug_assertions)
         && !options.contains(NotedeckOptions::Debug)
@@ -136,7 +147,8 @@ fn stop_debug_mode(options: NotedeckOptions) {
 }
 
 impl Chrome {
-    /// Create a new chrome with the default app setup
+    /// Create a new chrome with the default app setup (non-iOS platforms with eframe)
+    #[cfg(not(target_os = "ios"))]
     pub fn new_with_apps(
         cc: &CreationContext,
         app_args: &[String],
@@ -146,6 +158,37 @@ impl Chrome {
 
         let context = &mut notedeck.app_context();
         let dave = Dave::new(cc.wgpu_render_state.as_ref());
+        let columns = Damus::new(context, app_args);
+        let mut chrome = Chrome::default();
+
+        notedeck.check_args(columns.unrecognized_args())?;
+
+        chrome.add_app(NotedeckApp::Columns(Box::new(columns)));
+        chrome.add_app(NotedeckApp::Dave(Box::new(dave)));
+
+        if notedeck.has_option(NotedeckOptions::FeatureNotebook) {
+            chrome.add_app(NotedeckApp::Notebook(Box::default()));
+        }
+
+        if notedeck.has_option(NotedeckOptions::FeatureClnDash) {
+            chrome.add_app(NotedeckApp::ClnDash(Box::default()));
+        }
+
+        chrome.set_active(0);
+
+        Ok(chrome)
+    }
+
+    /// Create a new chrome with the default app setup (iOS platform without eframe)
+    #[cfg(target_os = "ios")]
+    pub fn new_with_apps_ios(
+        app_args: &[String],
+        notedeck: &mut Notedeck,
+    ) -> Result<Self, Error> {
+        stop_debug_mode(notedeck.options());
+
+        let context = &mut notedeck.app_context();
+        let dave = Dave::new();
         let columns = Damus::new(context, app_args);
         let mut chrome = Chrome::default();
 
@@ -416,13 +459,20 @@ fn notebook_button(ui: &mut egui::Ui) -> egui::Response {
     )
 }
 
+#[cfg(not(target_os = "ios"))]
 fn dave_button(avatar: Option<&mut DaveAvatar>, ui: &mut egui::Ui, rect: Rect) -> egui::Response {
     if let Some(avatar) = avatar {
         avatar.render(rect, ui)
     } else {
         // plain icon if wgpu device not available??
-        ui.label("fixme")
+        ui.add(app_images::algo_image())
     }
+}
+
+#[cfg(target_os = "ios")]
+fn dave_button(ui: &mut egui::Ui, _rect: Rect) -> egui::Response {
+    // On iOS, DaveAvatar (3D rendering) is not available
+    ui.add(app_images::algo_image())
 }
 
 pub fn get_profile_url_owned(profile: Option<ProfileRecord<'_>>) -> &str {
@@ -791,9 +841,18 @@ fn topdown_sidebar(
                                     ui.add(app_images::columns_image());
                                 }
 
-                                NotedeckApp::Dave(dave) => {
+                                NotedeckApp::Dave(_dave) => {
+                                    #[cfg(not(target_os = "ios"))]
                                     dave_button(
-                                        dave.avatar_mut(),
+                                        _dave.avatar_mut(),
+                                        ui,
+                                        Rect::from_center_size(
+                                            ui.available_rect_before_wrap().center(),
+                                            vec2(30.0, 30.0),
+                                        ),
+                                    );
+                                    #[cfg(target_os = "ios")]
+                                    dave_button(
                                         ui,
                                         Rect::from_center_size(
                                             ui.available_rect_before_wrap().center(),
