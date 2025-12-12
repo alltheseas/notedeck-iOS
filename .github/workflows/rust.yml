@@ -10,7 +10,7 @@ on:
       - "*"
 
 jobs:
-  lint: 
+  lint:
     name: Rustfmt + Clippy
     runs-on: ubuntu-22.04
     steps:
@@ -20,7 +20,8 @@ jobs:
           components: rustfmt,clippy
       - run: |
           cargo fmt --all -- --check
-          cargo clippy
+          # Exclude notedeck_ios from clippy on Linux (it only compiles on iOS)
+          cargo clippy --workspace --exclude notedeck_ios --exclude egui-ios
 
   android:
     name: Check (android)
@@ -42,7 +43,21 @@ jobs:
       - name: Install Cargo NDK
         run: cargo install cargo-ndk
       - name: Run tests
-        run: make jni-check
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
+        run: cargo ndk --target arm64-v8a check --workspace --exclude notedeck_ios --exclude egui-ios
+
+  ios:
+    name: Check (iOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Add iOS targets
+        run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim
+      - name: Check iOS device build
+        run: cargo check -p notedeck_ios --target aarch64-apple-ios
+      - name: Check iOS simulator build
+        run: cargo check -p notedeck_ios --target aarch64-apple-ios-sim
 
   linux-test:
     name: Test (Linux)
@@ -92,11 +107,13 @@ jobs:
 
       - name: Build Cross (${{ matrix.arch }})
         if: matrix.arch != runner.arch
-        run: cargo build --release --target=${{ matrix.arch }}-unknown-linux-gnu
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
+        run: cargo build --release --target=${{ matrix.arch }}-unknown-linux-gnu --workspace --exclude notedeck_ios --exclude egui-ios
 
       - name: Build Native (${{ matrix.arch }})
         if: matrix.arch == runner.arch
-        run: cargo build --release
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
+        run: cargo build --release --workspace --exclude notedeck_ios --exclude egui-ios
 
       - name: Build RPM (Cross)
         if: matrix.arch != runner.arch
@@ -209,7 +226,8 @@ jobs:
 
       # Build
       - name: Build (Native Only)
-        run: cargo build --release
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
+        run: cargo build --release --workspace --exclude notedeck_ios --exclude egui-ios
 
       # Create packages directory
       - name: Create packages directory
@@ -226,10 +244,11 @@ jobs:
       # Build
       - name: Build
         shell: pwsh
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
         run: |
           $target = "${{ matrix.arch }}-pc-windows-msvc"
           Write-Output "Building for target: $target"
-          cargo build --release --target=$target
+          cargo build --release --target=$target --workspace --exclude notedeck_ios --exclude egui-ios
 
       # Generate ISS Script
       - name: Generate Inno Setup Script

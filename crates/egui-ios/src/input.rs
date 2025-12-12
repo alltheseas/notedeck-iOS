@@ -75,9 +75,7 @@ impl InputEvent {
                 Some(Event::WindowFocused(phase == ScenePhase::Active as u8))
             }
             InputEvent::TextCommit(text) => Some(Event::Text(text)),
-            InputEvent::ImePreedit(text) => {
-                Some(Event::Ime(egui::ImeEvent::Preedit(text)))
-            }
+            InputEvent::ImePreedit(text) => Some(Event::Ime(egui::ImeEvent::Preedit(text))),
             InputEvent::KeyboardVisibility(_) => None, // Handled separately
             InputEvent::VirtualKey(key_code, pressed) => virtual_key_to_event(key_code, pressed),
         }

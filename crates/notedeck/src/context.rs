@@ -1,11 +1,7 @@
 use crate::{
-    account::accounts::Accounts,
-    clipboard::Clipboard,
-    frame_history::FrameHistory,
-    i18n::Localization,
-    wallet::GlobalWallet,
-    zaps::Zaps,
-    Args, DataPath, Images, JobPool, MediaJobs, NoteCache, SettingsHandler, UnknownIds,
+    account::accounts::Accounts, clipboard::Clipboard, frame_history::FrameHistory,
+    i18n::Localization, wallet::GlobalWallet, zaps::Zaps, Args, DataPath, Images, JobPool,
+    MediaJobs, NoteCache, SettingsHandler, UnknownIds,
 };
 
 use enostr::RelayPool;

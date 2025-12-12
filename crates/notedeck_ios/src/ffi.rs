@@ -82,7 +82,7 @@ pub mod ffi {
 
         #[swift_bridge(init)]
         fn new(
-            layer_ptr: *mut c_void,
+            view_ptr: *mut c_void,
             width: u32,
             height: u32,
             display_scale: f32,

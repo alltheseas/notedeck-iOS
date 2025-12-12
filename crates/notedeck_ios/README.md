@@ -17,7 +17,7 @@ Unlike desktop (eframe) or Android (winit), iOS uses a different architecture:
 │                              ▼                              │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │              NotedeckUIView (UIView)                 │   │
-│  │  - CAMetalLayer for rendering                        │   │
+│  │  - UIView with CAMetalLayer for rendering            │   │
 │  │  - Touch event handling                              │   │
 │  │  - Keyboard input                                    │   │
 │  └──────────────────────────────────────────────────────┘   │
@@ -45,7 +45,7 @@ Unlike desktop (eframe) or Android (winit), iOS uses a different architecture:
 │                              ▼                              │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │                    Notedeck Core                     │   │
-│  │  - nostrdb (LMDB with iOS-specific 1GiB map size)    │   │
+│  │  - nostrdb (LMDB with iOS-specific 32GiB map size)   │   │
 │  │  - Relay connections                                 │   │
 │  │  - Account management                                │   │
 │  └──────────────────────────────────────────────────────┘   │
@@ -58,7 +58,7 @@ Unlike desktop (eframe) or Android (winit), iOS uses a different architecture:
 |--------|------------------|---------|-----|
 | Event Loop | eframe/winit | winit via android-activity | SwiftUI/CADisplayLink |
 | Rendering | wgpu/glow | wgpu/glow | wgpu (Metal only) |
-| Surface | Window handle | ANativeWindow | CAMetalLayer |
+| Surface | Window handle | ANativeWindow | UIView (CAMetalLayer) |
 | FFI | N/A | JNI | swift-bridge |
 | Safe Area | N/A | Window insets | UIWindow.safeAreaInsets |
 
@@ -134,9 +134,10 @@ Shared egui iOS types (used by both `notedeck_ios` and potentially other iOS egu
 
 iOS has stricter virtual memory limits than desktop. Key adjustments:
 
-- **LMDB map size**: Reduced from 1 TiB (desktop) to 1 GiB (iOS)
+- **LMDB map size**: 32 GiB on iOS (vs 1 TiB on desktop)
   - Location: `crates/notedeck/src/app.rs`
-  - iOS kills apps that try to map too much virtual memory
+  - Requires `com.apple.developer.kernel.extended-virtual-addressing` entitlement
+  - Without the entitlement, iOS kills apps that try to map too much virtual memory
 
 ### Safe Area Insets
 
@@ -215,7 +216,7 @@ type InputEvent;        // Touch, keyboard events
 ## Troubleshooting
 
 ### "mdb_env_open failed, error 12"
-LMDB memory map too large. Ensure iOS uses 1 GiB map size.
+LMDB memory map too large. Ensure the `com.apple.developer.kernel.extended-virtual-addressing` entitlement is enabled in your Xcode project.
 
 ### Black screen on launch
 Check Xcode console for panic messages. Common causes:
