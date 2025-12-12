@@ -1,0 +1,23 @@
+[package]
+name = "egui-ios"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "iOS FFI bindings for egui via swift-bridge"
+repository = "https://github.com/alltheseas/egui-iOS"
+keywords = ["egui", "ios", "swift", "ffi"]
+categories = ["gui", "rendering"]
+readme = "README.md"
+
+[dependencies]
+egui = { workspace = true }
+swift-bridge = "0.1"
+
+[build-dependencies]
+swift-bridge-build = "0.1"
+
+[lints.rust]
+unsafe_code = "allow"
+
+[features]
+default = []
