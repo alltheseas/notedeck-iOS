@@ -212,10 +212,10 @@ impl Notedeck {
             // 16 GiB on Windows because LMDB actually creates the file on disk
             1024usize * 1024usize * 1024usize * 16usize
         } else if cfg!(target_os = "ios") {
-            // 1 GiB on iOS - the system kills apps that request too much virtual memory.
-            // iOS has stricter memory limits than desktop OSes; 1 TiB would cause
-            // "mdb_env_open failed, error 12" (ENOMEM) and app termination.
-            1024usize * 1024usize * 1024usize
+            // 32 GiB on iOS with extended virtual addressing entitlement.
+            // Requires com.apple.developer.kernel.extended-virtual-addressing in entitlements.
+            // Without the entitlement, iOS kills apps that request too much virtual memory.
+            1024usize * 1024usize * 1024usize * 32usize
         } else {
             // 1 TiB for macOS/Linux since it's just virtually mapped (not allocated)
             1024usize * 1024usize * 1024usize * 1024usize
