@@ -44,6 +44,19 @@ jobs:
       - name: Run tests
         run: make jni-check
 
+  ios:
+    name: Check (iOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Add iOS targets
+        run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim
+      - name: Check iOS device build
+        run: cargo check -p notedeck_ios --target aarch64-apple-ios
+      - name: Check iOS simulator build
+        run: cargo check -p notedeck_ios --target aarch64-apple-ios-sim
+
   linux-test:
     name: Test (Linux)
     uses: ./.github/workflows/build-and-test.yml
