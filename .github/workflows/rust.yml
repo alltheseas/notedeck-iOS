@@ -10,7 +10,7 @@ on:
       - "*"
 
 jobs:
-  lint: 
+  lint:
     name: Rustfmt + Clippy
     runs-on: ubuntu-22.04
     steps:
@@ -20,7 +20,8 @@ jobs:
           components: rustfmt,clippy
       - run: |
           cargo fmt --all -- --check
-          cargo clippy
+          # Exclude notedeck_ios from clippy on Linux (it only compiles on iOS)
+          cargo clippy --workspace --exclude notedeck_ios --exclude egui-ios
 
   android:
     name: Check (android)
@@ -42,7 +43,8 @@ jobs:
       - name: Install Cargo NDK
         run: cargo install cargo-ndk
       - name: Run tests
-        run: make jni-check
+        # Exclude iOS-only crates that don't compile on non-iOS platforms
+        run: cargo ndk --target arm64-v8a check --workspace --exclude notedeck_ios --exclude egui-ios
 
   ios:
     name: Check (iOS)

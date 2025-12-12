@@ -19,10 +19,7 @@ use std::ptr::NonNull;
 use std::sync::Arc;
 
 use futures::executor;
-use raw_window_handle::{
-    HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, UiKitDisplayHandle,
-    UiKitWindowHandle,
-};
+use raw_window_handle::{RawDisplayHandle, RawWindowHandle, UiKitDisplayHandle, UiKitWindowHandle};
 
 use notedeck::{App, Notedeck};
 use notedeck_chrome::Chrome;
