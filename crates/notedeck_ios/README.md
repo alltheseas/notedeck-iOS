@@ -155,11 +155,39 @@ let frame = egui::Frame::NONE.inner_margin(egui::Margin {
 
 ### Mobile UI Detection
 
-The app uses `is_narrow()` to detect mobile screens:
-- Screen width < 550 points triggers mobile UI (`render_damus_mobile`)
-- Screen width >= 550 points triggers desktop UI (`render_damus_desktop`)
+The mobile vs desktop UI is determined **automatically by screen width**, not by platform detection. There is no iOS-specific "use mobile UI" flag.
 
-iPhone 13 reports ~390 points width, correctly triggering mobile UI.
+**How it works:**
+
+1. The iOS renderer calculates screen dimensions in points:
+   ```rust
+   // renderer.rs
+   let width_points = self.config.width as f32 / ctx.pixels_per_point();
+   self.raw_input.screen_rect = Some(rect);
+   ```
+
+2. The shared `is_narrow()` function checks the width:
+   ```rust
+   // crates/notedeck/src/ui.rs
+   pub fn is_narrow(ctx: &egui::Context) -> bool {
+       let screen_size = ctx.input(|c| c.screen_rect().size());
+       screen_size.x < 550.0  // NARROW_SCREEN_WIDTH
+   }
+   ```
+
+3. The app selects the appropriate UI:
+   ```rust
+   // crates/notedeck_columns/src/app.rs
+   if notedeck::ui::is_narrow(ui.ctx()) {
+       render_damus_mobile(...)   // Single column, swipeable
+   } else {
+       render_damus_desktop(...)  // Multi-column layout
+   }
+   ```
+
+**Result:** iPhone 13 reports ~390 points width, which is less than 550, so `is_narrow()` returns `true` and the mobile UI is shown automatically.
+
+This is the same logic used for narrow desktop windows - iOS gets mobile UI because iPhone screens are narrow, not because it's iOS. An iPad in landscape might show desktop UI if the width exceeds 550 points.
 
 ### Debug Mode
 
