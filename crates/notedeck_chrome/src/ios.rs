@@ -144,10 +144,7 @@ static mut NOTEDECK_IOS: Option<NotedeckIos> = None;
 /// # Safety
 /// Must be called from the main thread before any other FFI functions.
 #[no_mangle]
-pub unsafe extern "C" fn notedeck_ios_init(
-    data_path: *const std::ffi::c_char,
-    scale_factor: f32,
-) {
+pub unsafe extern "C" fn notedeck_ios_init(data_path: *const std::ffi::c_char, scale_factor: f32) {
     let data_path = if data_path.is_null() {
         String::new()
     } else {

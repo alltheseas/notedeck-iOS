@@ -200,7 +200,10 @@ impl NotedeckRenderer {
         };
         tracing::debug!(
             "Safe area set: top={}, right={}, bottom={}, left={}",
-            top, right, bottom, left
+            top,
+            right,
+            bottom,
+            left
         );
     }
 
@@ -247,10 +250,8 @@ impl NotedeckRenderer {
         // Set screen rect
         let width_points = self.config.width as f32 / ctx.pixels_per_point();
         let height_points = self.config.height as f32 / ctx.pixels_per_point();
-        let rect = egui::Rect::from_min_size(
-            egui::Pos2::ZERO,
-            egui::vec2(width_points, height_points),
-        );
+        let rect =
+            egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(width_points, height_points));
         self.raw_input.screen_rect = Some(rect);
 
         // Log screen dimensions for debugging mobile vs desktop UI detection
@@ -285,14 +286,12 @@ impl NotedeckRenderer {
                 left: safe_area.left.round() as i8,
             });
 
-            egui::CentralPanel::default()
-                .frame(frame)
-                .show(ctx, |ui| {
-                    if let Some(chrome) = &mut self.chrome {
-                        let mut app_ctx = self.notedeck.app_context();
-                        let _ = chrome.update(&mut app_ctx, ui);
-                    }
-                });
+            egui::CentralPanel::default().frame(frame).show(ctx, |ui| {
+                if let Some(chrome) = &mut self.chrome {
+                    let mut app_ctx = self.notedeck.app_context();
+                    let _ = chrome.update(&mut app_ctx, ui);
+                }
+            });
         });
 
         // Extract output state
@@ -362,8 +361,11 @@ impl NotedeckRenderer {
             });
 
             // Use forget_lifetime() to satisfy the 'static requirement in the damus egui fork
-            self.egui_renderer
-                .render(&mut render_pass.forget_lifetime(), &paint_jobs, &screen_descriptor);
+            self.egui_renderer.render(
+                &mut render_pass.forget_lifetime(),
+                &paint_jobs,
+                &screen_descriptor,
+            );
         }
 
         // Submit commands

@@ -181,10 +181,7 @@ impl Chrome {
 
     /// Create a new chrome with the default app setup (iOS platform without eframe)
     #[cfg(target_os = "ios")]
-    pub fn new_with_apps_ios(
-        app_args: &[String],
-        notedeck: &mut Notedeck,
-    ) -> Result<Self, Error> {
+    pub fn new_with_apps_ios(app_args: &[String], notedeck: &mut Notedeck) -> Result<Self, Error> {
         stop_debug_mode(notedeck.options());
 
         let context = &mut notedeck.app_context();
