@@ -4,7 +4,6 @@ use async_openai::{
     Client,
 };
 use chrono::{Duration, Local};
-use egui_wgpu::RenderState;
 use enostr::KeypairUnowned;
 use futures::StreamExt;
 use nostrdb::Transaction;
@@ -14,29 +13,40 @@ use std::string::ToString;
 use std::sync::mpsc::{self, Receiver};
 use std::sync::Arc;
 
+#[cfg(not(target_os = "ios"))]
+use egui_wgpu::RenderState;
+
+#[cfg(not(target_os = "ios"))]
 pub use avatar::DaveAvatar;
 pub use config::ModelConfig;
 pub use messages::{DaveApiResponse, Message};
+#[cfg(not(target_os = "ios"))]
 pub use quaternion::Quaternion;
 pub use tools::{
     PartialToolCall, QueryCall, QueryResponse, Tool, ToolCall, ToolCalls, ToolResponse,
     ToolResponses,
 };
 pub use ui::{DaveAction, DaveResponse, DaveUi};
+#[cfg(not(target_os = "ios"))]
 pub use vec3::Vec3;
 
+#[cfg(not(target_os = "ios"))]
 mod avatar;
 mod config;
+#[cfg(not(target_os = "ios"))]
 pub(crate) mod mesh;
 mod messages;
+#[cfg(not(target_os = "ios"))]
 mod quaternion;
 mod tools;
 mod ui;
+#[cfg(not(target_os = "ios"))]
 mod vec3;
 
 pub struct Dave {
     chat: Vec<Message>,
-    /// A 3d representation of dave.
+    /// A 3d representation of dave (only on non-iOS platforms with wgpu support)
+    #[cfg(not(target_os = "ios"))]
     avatar: Option<DaveAvatar>,
     input: String,
     tools: Arc<HashMap<String, Tool>>,
@@ -59,6 +69,7 @@ fn calculate_user_id(keypair: KeypairUnowned) -> String {
 }
 
 impl Dave {
+    #[cfg(not(target_os = "ios"))]
     pub fn avatar_mut(&mut self) -> Option<&mut DaveAvatar> {
         self.avatar.as_mut()
     }
@@ -87,6 +98,7 @@ You are an AI agent for the nostr protocol called Dave, created by Damus. nostr 
         ))
     }
 
+    #[cfg(not(target_os = "ios"))]
     pub fn new(render_state: Option<&RenderState>) -> Self {
         let model_config = ModelConfig::default();
         //let model_config = ModelConfig::ollama();
@@ -110,6 +122,27 @@ You are an AI agent for the nostr protocol called Dave, created by Damus. nostr 
         }
     }
 
+    #[cfg(target_os = "ios")]
+    pub fn new() -> Self {
+        let model_config = ModelConfig::default();
+        let client = Client::with_config(model_config.to_api());
+
+        let input = "".to_string();
+        let mut tools: HashMap<String, Tool> = HashMap::new();
+        for tool in tools::dave_tools() {
+            tools.insert(tool.name().to_string(), tool);
+        }
+
+        Dave {
+            client,
+            incoming_tokens: None,
+            tools: Arc::new(tools),
+            input,
+            model_config,
+            chat: vec![],
+        }
+    }
+
     /// Process incoming tokens from the ai backend
     fn process_events(&mut self, app_ctx: &AppContext) -> bool {
         // Should we continue sending requests? Set this to true if
@@ -121,6 +154,7 @@ You are an AI agent for the nostr protocol called Dave, created by Damus. nostr 
         };
 
         while let Ok(res) = recvr.try_recv() {
+            #[cfg(not(target_os = "ios"))]
             if let Some(avatar) = &mut self.avatar {
                 avatar.random_nudge();
             }

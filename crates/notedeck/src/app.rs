@@ -1,4 +1,5 @@
 use crate::account::FALLBACK_PUBKEY;
+use crate::clipboard::PlatformClipboard;
 use crate::i18n::Localization;
 use crate::persist::{AppSizeHandler, SettingsHandler};
 use crate::wallet::GlobalWallet;
@@ -12,7 +13,6 @@ use crate::{Error, JobCache};
 use crate::{JobPool, MediaJobs};
 use egui::Margin;
 use egui::ThemePreference;
-use egui_winit::clipboard::Clipboard;
 use enostr::RelayPool;
 use nostrdb::{Config, Ndb, Transaction};
 use std::cell::RefCell;
@@ -73,7 +73,7 @@ pub struct Notedeck {
     app: Option<Rc<RefCell<dyn App>>>,
     app_size: AppSizeHandler,
     unrecognized_args: BTreeSet<String>,
-    clipboard: Clipboard,
+    clipboard: PlatformClipboard,
     zaps: Zaps,
     frame_history: FrameHistory,
     job_pool: JobPool,
@@ -117,6 +117,7 @@ fn render_notedeck(notedeck: &mut Notedeck, ctx: &egui::Context) {
     });
 }
 
+#[cfg(not(target_os = "ios"))]
 impl eframe::App for Notedeck {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         profiling::finish_frame!();
@@ -205,11 +206,18 @@ impl Notedeck {
         let img_cache_dir = path.path(DataPathType::Cache);
         let _ = std::fs::create_dir_all(img_cache_dir.clone());
 
+        // LMDB memory map size configuration.
+        // Different platforms have different virtual memory constraints:
         let map_size = if cfg!(target_os = "windows") {
-            // 16 Gib on windows because it actually creates the file
+            // 16 GiB on Windows because LMDB actually creates the file on disk
             1024usize * 1024usize * 1024usize * 16usize
+        } else if cfg!(target_os = "ios") {
+            // 1 GiB on iOS - the system kills apps that request too much virtual memory.
+            // iOS has stricter memory limits than desktop OSes; 1 TiB would cause
+            // "mdb_env_open failed, error 12" (ENOMEM) and app termination.
+            1024usize * 1024usize * 1024usize
         } else {
-            // 1 TiB for everything else since its just virtually mapped
+            // 1 TiB for macOS/Linux since it's just virtually mapped (not allocated)
             1024usize * 1024usize * 1024usize * 1024usize
         };
 
@@ -316,7 +324,7 @@ impl Notedeck {
             app_size,
             unrecognized_args,
             frame_history: FrameHistory::default(),
-            clipboard: Clipboard::new(None),
+            clipboard: PlatformClipboard::default(),
             zaps,
             job_pool,
             media_jobs: media_job_cache,
@@ -418,6 +426,6 @@ impl Notedeck {
 }
 
 pub fn install_crypto() {
-    let provider = rustls::crypto::aws_lc_rs::default_provider();
+    let provider = rustls::crypto::ring::default_provider();
     let _ = provider.install_default();
 }

@@ -4,6 +4,7 @@ mod context;
 pub use action::{NoteAction, ReactAction, ScrollInfo, ZapAction, ZapTargetAmount};
 pub use context::{BroadcastContext, ContextSelection, NoteContextSelection};
 
+use crate::clipboard::Clipboard;
 use crate::jobs::MediaJobSender;
 use crate::Accounts;
 use crate::GlobalWallet;
@@ -29,7 +30,7 @@ pub struct NoteContext<'d> {
     pub pool: &'d mut RelayPool,
     pub jobs: &'d MediaJobSender,
     pub unknown_ids: &'d mut UnknownIds,
-    pub clipboard: &'d mut egui_winit::clipboard::Clipboard,
+    pub clipboard: &'d mut dyn Clipboard,
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]

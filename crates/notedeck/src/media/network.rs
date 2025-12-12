@@ -6,30 +6,32 @@ use hyper::{
     header::{self},
     Request, Uri,
 };
-use hyper_rustls::HttpsConnectorBuilder;
-use hyper_util::{client::legacy::Client, rt::TokioExecutor};
+use hyper_rustls::{HttpsConnector, HttpsConnectorBuilder};
+use hyper_util::{
+    client::legacy::{connect::HttpConnector, Client},
+    rt::TokioExecutor,
+};
 use url::Url;
 
 const MAX_BODY_BYTES: usize = 20 * 1024 * 1024;
 
+/// Type alias for the HTTPS client
+type HttpsClient = Client<HttpsConnector<HttpConnector>, Empty<Bytes>>;
+
 pub async fn http_req(url: &str) -> Result<HyperHttpResponse, HyperHttpError> {
     let mut current_uri: Uri = url.parse().map_err(|_| HyperHttpError::Uri)?;
 
-    let https = {
-        let builder = match HttpsConnectorBuilder::new().with_native_roots() {
-            Ok(builder) => builder,
-            Err(err) => {
-                tracing::warn!(
-                    "Failed to load native root certificates ({err}). Falling back to WebPKI store."
-                );
-                HttpsConnectorBuilder::new().with_webpki_roots()
-            }
-        };
+    let https: HttpsConnector<HttpConnector> = HttpsConnectorBuilder::new()
+        .with_native_roots()
+        .map_err(|e| {
+            tracing::warn!("Failed to load native root certificates ({e}).");
+            HyperHttpError::Hyper(Box::new(e))
+        })?
+        .https_or_http()
+        .enable_http1()
+        .build();
 
-        builder.https_or_http().enable_http1().build()
-    };
-
-    let client: Client<_, Empty<Bytes>> = Client::builder(TokioExecutor::new()).build(https);
+    let client: HttpsClient = Client::builder(TokioExecutor::new()).build(https);
 
     const MAX_REDIRECTS: usize = 5;
     let mut redirects = 0;
@@ -65,8 +67,8 @@ pub async fn http_req(url: &str) -> Result<HyperHttpResponse, HyperHttpError> {
                 .map_err(|_| HyperHttpError::InvalidRedirectLocation)?
                 .to_string();
 
-            res.into_body()
-                .collect()
+            let redirect_body: hyper::body::Incoming = res.into_body();
+            let _ = BodyExt::collect(redirect_body)
                 .await
                 .map_err(|e| HyperHttpError::Hyper(Box::new(e)))?;
 
@@ -81,14 +83,14 @@ pub async fn http_req(url: &str) -> Result<HyperHttpResponse, HyperHttpError> {
     let content_type = res
         .headers()
         .get(hyper::header::CONTENT_TYPE)
-        .and_then(|t| t.to_str().ok())
-        .map(|s| s.to_string());
+        .and_then(|t: &hyper::header::HeaderValue| t.to_str().ok())
+        .map(|s: &str| s.to_string());
 
     let content_length = res
         .headers()
         .get(header::CONTENT_LENGTH)
-        .and_then(|s| s.to_str().ok())
-        .and_then(|s| s.parse::<usize>().ok());
+        .and_then(|s: &hyper::header::HeaderValue| s.to_str().ok())
+        .and_then(|s: &str| s.parse::<usize>().ok());
 
     if let Some(len) = content_length {
         if len > MAX_BODY_BYTES {
@@ -96,21 +98,20 @@ pub async fn http_req(url: &str) -> Result<HyperHttpResponse, HyperHttpError> {
         }
     }
 
-    let mut body = res.into_body();
+    let body: hyper::body::Incoming = res.into_body();
     let mut bytes = Vec::with_capacity(content_length.unwrap_or(0).min(MAX_BODY_BYTES));
 
-    while let Some(frame_result) = body.frame().await {
-        let frame = frame_result.map_err(|e| HyperHttpError::Hyper(Box::new(e)))?;
-        let Ok(chunk) = frame.into_data() else {
-            continue;
-        };
+    // Collect the body using BodyExt
+    let collected = BodyExt::collect(body)
+        .await
+        .map_err(|e| HyperHttpError::Hyper(Box::new(e)))?;
 
-        if bytes.len() + chunk.len() > MAX_BODY_BYTES {
-            return Err(HyperHttpError::BodyTooLarge);
-        }
-
-        bytes.extend_from_slice(&chunk);
+    let chunk = collected.to_bytes();
+    if chunk.len() > MAX_BODY_BYTES {
+        return Err(HyperHttpError::BodyTooLarge);
     }
+
+    bytes.extend_from_slice(&chunk);
 
     Ok(HyperHttpResponse {
         content_type,

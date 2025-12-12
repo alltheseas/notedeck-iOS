@@ -4,9 +4,8 @@ use crate::ui::{Preview, PreviewConfig};
 use egui::{
     Align, Button, Color32, Frame, InnerResponse, Layout, Margin, RichText, TextEdit, Vec2,
 };
-use egui_winit::clipboard::Clipboard;
 use enostr::Keypair;
-use notedeck::{fonts::get_font_size, tr, Localization, NotedeckTextStyle};
+use notedeck::{fonts::get_font_size, tr, Clipboard, Localization, NotedeckTextStyle};
 use notedeck_ui::{
     app_images,
     context_menu::{input_context, PasteBehavior},
@@ -14,7 +13,7 @@ use notedeck_ui::{
 
 pub struct AccountLoginView<'a> {
     manager: &'a mut AcquireKeyState,
-    clipboard: &'a mut Clipboard,
+    clipboard: &'a mut dyn Clipboard,
     i18n: &'a mut Localization,
 }
 
@@ -27,7 +26,7 @@ pub enum AccountLoginResponse {
 impl<'a> AccountLoginView<'a> {
     pub fn new(
         manager: &'a mut AcquireKeyState,
-        clipboard: &'a mut Clipboard,
+        clipboard: &'a mut dyn Clipboard,
         i18n: &'a mut Localization,
     ) -> Self {
         AccountLoginView {

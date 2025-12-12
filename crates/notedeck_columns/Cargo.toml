@@ -22,7 +22,6 @@ notedeck = { workspace = true }
 tokenator = { workspace = true }
 bitflags = { workspace = true }
 dirs = { workspace = true }
-eframe = { workspace = true }
 thiserror = { workspace = true }
 egui = { workspace = true }
 egui_extras = { workspace = true }
@@ -54,7 +53,6 @@ urlencoding = { workspace = true }
 uuid = { workspace = true }
 sha2 = { workspace = true }
 base64 = { workspace = true }
-egui-winit = { workspace = true }
 profiling = { workspace = true }
 hashbrown = { workspace = true }
 oot_bitset = { workspace = true }

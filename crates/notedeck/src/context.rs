@@ -1,9 +1,12 @@
 use crate::{
-    account::accounts::Accounts, frame_history::FrameHistory, i18n::Localization,
-    wallet::GlobalWallet, zaps::Zaps, Args, DataPath, Images, JobPool, MediaJobs, NoteCache,
-    SettingsHandler, UnknownIds,
+    account::accounts::Accounts,
+    clipboard::Clipboard,
+    frame_history::FrameHistory,
+    i18n::Localization,
+    wallet::GlobalWallet,
+    zaps::Zaps,
+    Args, DataPath, Images, JobPool, MediaJobs, NoteCache, SettingsHandler, UnknownIds,
 };
-use egui_winit::clipboard::Clipboard;
 
 use enostr::RelayPool;
 use nostrdb::Ndb;
@@ -24,7 +27,7 @@ pub struct AppContext<'a> {
     pub path: &'a DataPath,
     pub args: &'a Args,
     pub settings: &'a mut SettingsHandler,
-    pub clipboard: &'a mut Clipboard,
+    pub clipboard: &'a mut dyn Clipboard,
     pub zaps: &'a mut Zaps,
     pub frame_history: &'a mut FrameHistory,
     pub job_pool: &'a mut JobPool,

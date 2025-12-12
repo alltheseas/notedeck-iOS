@@ -1,10 +1,10 @@
 use core::f32;
 
 use egui::{vec2, Button, CornerRadius, Layout, Margin, RichText, ScrollArea, TextEdit};
-use egui_winit::clipboard::Clipboard;
 use enostr::ProfileState;
 use notedeck::{
-    profile::unwrap_profile_url, tr, Images, Localization, MediaJobSender, NotedeckTextStyle,
+    profile::unwrap_profile_url, tr, Clipboard, Images, Localization, MediaJobSender,
+    NotedeckTextStyle,
 };
 use notedeck_ui::context_menu::{input_context, PasteBehavior};
 use notedeck_ui::{profile::banner, ProfilePic};
@@ -13,7 +13,7 @@ use crate::nav::BodyResponse;
 
 pub struct EditProfileView<'a> {
     state: &'a mut ProfileState,
-    clipboard: &'a mut Clipboard,
+    clipboard: &'a mut dyn Clipboard,
     img_cache: &'a mut Images,
     i18n: &'a mut Localization,
     jobs: &'a MediaJobSender,
@@ -24,7 +24,7 @@ impl<'a> EditProfileView<'a> {
         i18n: &'a mut Localization,
         state: &'a mut ProfileState,
         img_cache: &'a mut Images,
-        clipboard: &'a mut Clipboard,
+        clipboard: &'a mut dyn Clipboard,
         jobs: &'a MediaJobSender,
     ) -> Self {
         Self {
@@ -222,7 +222,7 @@ fn label(text: &str) -> impl egui::Widget + '_ {
     }
 }
 
-fn singleline_textedit(ui: &mut egui::Ui, data: &mut String, clipboard: &mut Clipboard) {
+fn singleline_textedit(ui: &mut egui::Ui, data: &mut String, clipboard: &mut dyn Clipboard) {
     let r = ui.add(
         TextEdit::singleline(data)
             .min_size(vec2(0.0, 40.0))
@@ -234,7 +234,7 @@ fn singleline_textedit(ui: &mut egui::Ui, data: &mut String, clipboard: &mut Cli
     input_context(ui, &r, clipboard, data, PasteBehavior::Clear);
 }
 
-fn multiline_textedit(ui: &mut egui::Ui, data: &mut String, clipboard: &mut Clipboard) {
+fn multiline_textedit(ui: &mut egui::Ui, data: &mut String, clipboard: &mut dyn Clipboard) {
     let r = ui.add(
         TextEdit::multiline(data)
             // .min_size(vec2(0.0, 40.0))

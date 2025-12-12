@@ -4,10 +4,8 @@ edition = "2021"
 version.workspace = true
 
 [dependencies]
-eframe = { workspace = true }
 egui = { workspace = true }
 egui_extras = { workspace = true }
-egui-winit = { workspace = true }
 strum_macros = { workspace = true }
 strum = { workspace = true }
 ehttp = { workspace = true }
@@ -21,3 +19,8 @@ image = { workspace = true }
 bitflags = { workspace = true }
 enostr = { workspace = true }
 hashbrown = { workspace = true }
+
+# eframe and egui-winit only available on non-iOS platforms
+[target.'cfg(not(target_os = "ios"))'.dependencies]
+eframe = { workspace = true }
+egui-winit = { workspace = true }

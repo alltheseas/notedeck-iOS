@@ -1,5 +1,5 @@
 /// Context menu helpers (paste, etc)
-use egui_winit::clipboard::Clipboard;
+use notedeck::Clipboard;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum PasteBehavior {
@@ -7,7 +7,7 @@ pub enum PasteBehavior {
     Append,
 }
 
-fn handle_paste(clipboard: &mut Clipboard, input: &mut String, paste_behavior: PasteBehavior) {
+fn handle_paste(clipboard: &mut dyn Clipboard, input: &mut String, paste_behavior: PasteBehavior) {
     if let Some(text) = clipboard.get() {
         // if called with clearing_input_context, then we clear before
         // we paste. Useful for certain fields like passwords, etc
@@ -22,7 +22,7 @@ fn handle_paste(clipboard: &mut Clipboard, input: &mut String, paste_behavior: P
 pub fn input_context(
     ui: &mut egui::Ui,
     response: &egui::Response,
-    clipboard: &mut Clipboard,
+    clipboard: &mut dyn Clipboard,
     input: &mut String,
     paste_behavior: PasteBehavior,
 ) {

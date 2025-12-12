@@ -1,5 +1,5 @@
 use egui::{vec2, CornerRadius, Layout};
-use egui_winit::clipboard::Clipboard;
+use notedeck::Clipboard;
 use notedeck::{
     get_current_wallet_mut, tr, Accounts, DefaultZapMsats, GlobalWallet, Localization,
     NotedeckTextStyle, PendingDefaultZapState, Wallet, WalletError, WalletUIState, ZapWallet,
@@ -155,14 +155,14 @@ impl WalletAction {
 pub struct WalletView<'a> {
     state: WalletState<'a>,
     i18n: &'a mut Localization,
-    clipboard: &'a mut Clipboard,
+    clipboard: &'a mut dyn Clipboard,
 }
 
 impl<'a> WalletView<'a> {
     pub fn new(
         state: WalletState<'a>,
         i18n: &'a mut Localization,
-        clipboard: &'a mut Clipboard,
+        clipboard: &'a mut dyn Clipboard,
     ) -> Self {
         Self {
             state,
@@ -216,7 +216,7 @@ fn show_no_wallet(
     i18n: &mut Localization,
     state: &mut WalletUIState,
     show_local_only: bool,
-    clipboard: &mut Clipboard,
+    clipboard: &mut dyn Clipboard,
 ) -> Option<WalletAction> {
     ui.horizontal_wrapped(|ui| {
         use notedeck_ui::context_menu::{input_context, PasteBehavior};

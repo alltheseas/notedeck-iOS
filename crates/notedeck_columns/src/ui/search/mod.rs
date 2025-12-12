@@ -7,8 +7,8 @@ use crate::{
     timeline::{TimelineTab, TimelineUnits},
     ui::timeline::TimelineTabView,
 };
-use egui_winit::clipboard::Clipboard;
 use nostrdb::{Filter, Ndb, ProfileRecord, Transaction};
+use notedeck::Clipboard;
 use notedeck::{
     fonts::get_font_size, name::get_display_name, profile::get_profile_url, tr, tr_plural, Images,
     Localization, MediaJobSender, NoteAction, NoteContext, NoteRef, NotedeckTextStyle,
@@ -500,7 +500,7 @@ fn search_box(
     input: &mut String,
     focus_state: FocusState,
     ui: &mut egui::Ui,
-    clipboard: &mut Clipboard,
+    clipboard: &mut dyn Clipboard,
 ) -> SearchResponse {
     ui.horizontal(|ui| {
         // Container for search input and icon

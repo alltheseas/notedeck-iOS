@@ -143,8 +143,10 @@ impl MediaCache {
         let file = Self::create_file(cache_dir, url)?;
         let encoder = image::codecs::webp::WebPEncoder::new_lossless(file);
 
+        // Convert Color32 pixels to raw bytes (RGBA format)
+        let raw_bytes: Vec<u8> = data.pixels.iter().flat_map(|c| c.to_array()).collect();
         encoder.encode(
-            data.as_raw(),
+            &raw_bytes,
             data.size[0] as u32,
             data.size[1] as u32,
             image::ColorType::Rgba8.into(),
