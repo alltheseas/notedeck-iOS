@@ -17,7 +17,7 @@ Unlike desktop (eframe) or Android (winit), iOS uses a different architecture:
 │                              ▼                              │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │              NotedeckUIView (UIView)                 │   │
-│  │  - CAMetalLayer for rendering                        │   │
+│  │  - UIView with CAMetalLayer for rendering            │   │
 │  │  - Touch event handling                              │   │
 │  │  - Keyboard input                                    │   │
 │  └──────────────────────────────────────────────────────┘   │
@@ -58,7 +58,7 @@ Unlike desktop (eframe) or Android (winit), iOS uses a different architecture:
 |--------|------------------|---------|-----|
 | Event Loop | eframe/winit | winit via android-activity | SwiftUI/CADisplayLink |
 | Rendering | wgpu/glow | wgpu/glow | wgpu (Metal only) |
-| Surface | Window handle | ANativeWindow | CAMetalLayer |
+| Surface | Window handle | ANativeWindow | UIView (CAMetalLayer) |
 | FFI | N/A | JNI | swift-bridge |
 | Safe Area | N/A | Window insets | UIWindow.safeAreaInsets |
 

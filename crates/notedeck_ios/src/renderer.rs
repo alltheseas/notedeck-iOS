@@ -4,10 +4,10 @@
 //! - wgpu with Metal backend for GPU rendering
 //! - egui integration for immediate-mode UI
 //! - Safe area inset handling for notch/Dynamic Island
-//! - CAMetalLayer surface management
+//! - UIView-based surface management (wgpu extracts CAMetalLayer)
 //!
 //! The renderer is created from Swift via FFI and receives:
-//! - A CAMetalLayer pointer for rendering surface
+//! - A UIView pointer for rendering surface (must have CAMetalLayer as its layer)
 //! - Screen dimensions and scale factor
 //! - Input events each frame (touch, keyboard, etc.)
 //!
@@ -15,9 +15,14 @@
 //! CADisplayLink drives the render loop and calls render() each frame.
 
 use std::path::PathBuf;
+use std::ptr::NonNull;
 use std::sync::Arc;
 
 use futures::executor;
+use raw_window_handle::{
+    HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, UiKitDisplayHandle,
+    UiKitWindowHandle,
+};
 
 use notedeck::{App, Notedeck};
 use notedeck_chrome::Chrome;
@@ -68,16 +73,16 @@ pub struct NotedeckRenderer {
 }
 
 impl NotedeckRenderer {
-    /// Create a new renderer with the given Metal layer
+    /// Create a new renderer with the given UIView
     ///
     /// # Arguments
-    /// * `layer_ptr` - Pointer to CAMetalLayer
+    /// * `view_ptr` - Pointer to UIView (wgpu extracts CAMetalLayer from it)
     /// * `width` - Width in pixels
     /// * `height` - Height in pixels
     /// * `display_scale` - Display scale factor (e.g., 2.0 for Retina)
     /// * `data_path` - Path to app data directory
     pub fn new(
-        layer_ptr: *mut std::ffi::c_void,
+        view_ptr: *mut std::ffi::c_void,
         width: u32,
         height: u32,
         display_scale: f32,
@@ -99,9 +104,19 @@ impl NotedeckRenderer {
             ..Default::default()
         };
         let instance = wgpu::Instance::new(&descriptor);
+
+        // Create surface using raw window handles for iOS/UIKit
         let surface = unsafe {
+            let view_ptr = NonNull::new(view_ptr).expect("view_ptr must not be null");
+            let window_handle = UiKitWindowHandle::new(view_ptr);
+            let display_handle = UiKitDisplayHandle::new();
+
+            let target = wgpu::SurfaceTargetUnsafe::RawHandle {
+                raw_display_handle: RawDisplayHandle::UiKit(display_handle),
+                raw_window_handle: RawWindowHandle::UiKit(window_handle),
+            };
             instance
-                .create_surface_unsafe(wgpu::SurfaceTargetUnsafe::CoreAnimationLayer(layer_ptr))
+                .create_surface_unsafe(target)
                 .expect("Failed to create surface")
         };
 

@@ -26,6 +26,9 @@ tokio = { workspace = true, features = ["rt", "macros"] }
 # wgpu for Metal rendering (must match egui-wgpu from damus fork: 24.0.0)
 wgpu = { version = "24.0.0", default-features = false, features = ["metal", "wgsl"] }
 
+# Raw window handle for iOS surface creation
+raw-window-handle = "0.6"
+
 # egui and rendering backend from damus fork
 egui = { workspace = true }
 egui-wgpu = { workspace = true }
